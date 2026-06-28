@@ -539,6 +539,20 @@ function cloneState(state: BackgammonState): BackgammonState {
 	};
 }
 
+function calcPipCount(state: BackgammonState, player: PieceColor): number {
+	let pips = 0;
+	for (let i = 0; i < 24; i++) {
+		const val = state.board[i];
+		const owner = pointOwner(val);
+		if (owner === player) {
+			const count = pieceCount(val);
+			pips += (player === 'white' ? (24 - i) : (i + 1)) * count;
+		}
+	}
+	pips += state.bar[player] * 25;
+	return pips;
+}
+
 // ============================
 // AUDIO
 // ============================
@@ -738,6 +752,15 @@ async function main() {
 	let highlightedMoves: number[][] = [];
 	let lastRng: (() => number) | undefined;
 	let moveAnimTimer = 0;
+	let moveHistory: BackgammonState[] = [];
+	let undoAvailable = false;
+	let leaderboardScores: { mode: string; score: number; date: string; winType: string }[] = [];
+
+	// Load leaderboard
+	try {
+		const lbRaw = localStorage.getItem('neon-backgammon-leaderboard');
+		if (lbRaw) leaderboardScores = JSON.parse(lbRaw);
+	} catch { /* ignore */ }
 
 	// Theme
 	let theme = THEMES[save.themeIndex];
@@ -886,6 +909,32 @@ async function main() {
 		else dot.position.z -= 0.02;
 		boardMesh.add(dot);
 	}
+
+	// Point coordinate markers (colored pips at board edge showing point numbers)
+	for (let i = 0; i < 24; i++) {
+		const markerGeo = new CylinderGeometry(0.006, 0.006, 0.003, 8);
+		const isWhiteHome = i >= 18 && i <= 23;
+		const isBlackHome = i >= 0 && i <= 5;
+		const markerColor = isWhiteHome ? skin.p1 : isBlackHome ? skin.p2 : theme.pip;
+		const markerMat = new MeshBasicMaterial({ color: markerColor, transparent: true, opacity: 0.6 });
+		const marker = new Mesh(markerGeo, markerMat);
+		const pm = pointMeshes[i];
+		marker.position.copy(pm.position);
+		marker.position.y = 0.041;
+		// Place at the edge of the board
+		if (i < 12) marker.position.z = 0.58;
+		else marker.position.z = -0.58;
+		boardMesh.add(marker);
+	}
+
+	// Doubling cube 3D mesh
+	const cubeGeo = new BoxGeometry(0.05, 0.05, 0.05);
+	const cubeMat = new MeshStandardMaterial({ color: 0xffdd44, emissive: new Color(0xffdd44).multiplyScalar(0.4), metalness: 0.4, roughness: 0.4 });
+	const cubeMesh = new Mesh(cubeGeo, cubeMat);
+	const cubeEdges = new LineSegments(new EdgesGeometry(cubeGeo), new LineBasicMaterial({ color: 0xffaa00 }));
+	cubeMesh.add(cubeEdges);
+	cubeMesh.position.set(0, 0.08, 0.65);
+	boardMesh.add(cubeMesh);
 
 	// ============================
 	// ENVIRONMENT (Holodeck)
@@ -1068,6 +1117,12 @@ async function main() {
 
 		// Render move highlights
 		for (const ring of highlightRings) ring.visible = false;
+		// Update doubling cube visual
+		cubeMesh.visible = gameState === 'playing';
+		cubeMesh.rotation.y += 0.002;
+		// Scale cube slightly based on value
+		const cubeScale = 1 + Math.log2(bgState.doublingCube) * 0.1;
+		cubeMesh.scale.set(cubeScale, cubeScale, cubeScale);
 		let ringIdx = 0;
 		for (const move of highlightedMoves) {
 			if (ringIdx >= highlightRings.length) break;
@@ -1217,6 +1272,11 @@ async function main() {
 			const legalMoves = getLegalMoves(bgState, die);
 			for (const m of legalMoves) {
 				if (m[0] === from && m[1] === to) {
+					// Save state for undo in practice mode
+					if (config.mode === 'practice') {
+						moveHistory.push(cloneState(bgState));
+						undoAvailable = true;
+					}
 					// Execute move!
 					const result = applyMove(bgState, from, to);
 					bgState.movesMade++;
@@ -1283,6 +1343,26 @@ async function main() {
 
 		renderBoard();
 		updateHUD();
+	}
+
+	function undoMove() {
+		if (config.mode !== 'practice' || moveHistory.length === 0) return;
+		bgState = moveHistory.pop()!;
+		undoAvailable = moveHistory.length > 0;
+		selectedPoint = -2;
+		highlightedMoves = [];
+		renderBoard();
+		updateHUD();
+		audio.click();
+		showToast('Move undone');
+	}
+
+	function saveLeaderboardScore(mode: string, score: number, winType: string) {
+		const today = new Date().toISOString().split('T')[0];
+		leaderboardScores.push({ mode, score, date: today, winType });
+		leaderboardScores.sort((a, b) => b.score - a.score);
+		if (leaderboardScores.length > 10) leaderboardScores = leaderboardScores.slice(0, 10);
+		try { localStorage.setItem('neon-backgammon-leaderboard', JSON.stringify(leaderboardScores)); } catch { /* ignore */ }
 	}
 
 	function doRoll() {
@@ -1372,6 +1452,8 @@ async function main() {
 		highlightedMoves = [];
 		blitzTimer = 30;
 		sessionStartTime = Date.now();
+		moveHistory = [];
+		undoAvailable = false;
 
 		if (config.mode === 'daily') {
 			const seed = dateToSeed(new Date());
@@ -1462,6 +1544,7 @@ async function main() {
 
 		checkAchievements();
 		saveSave(save);
+		saveLeaderboardScore(config.mode, points * 100, winType);
 		updateGameOver(winner, winType, points);
 	}
 
@@ -1545,7 +1628,7 @@ async function main() {
 			case 'achievements': setVis('achievements', true); updateAchievements(); break;
 			case 'settings': setVis('settings', true); updateSettings(); break;
 			case 'help': setVis('help', true); break;
-			case 'leaderboard': setVis('leaderboard', true); break;
+			case 'leaderboard': setVis('leaderboard', true); updateLeaderboard(); break;
 			case 'stats': setVis('stats', true); updateStats(); break;
 			case 'skins': setVis('skins', true); updateSkins(); break;
 			case 'countdown':
@@ -1571,7 +1654,9 @@ async function main() {
 		if (config.mode === 'blitz') {
 			setText('hud', 'timer-text', `Time: ${Math.ceil(blitzTimer)}s`);
 		} else {
-			setText('hud', 'timer-text', `Mode: ${config.mode}`);
+			const wp = calcPipCount(bgState, 'white');
+			const bp = calcPipCount(bgState, 'black');
+			setText('hud', 'timer-text', `Pips: ${wp} vs ${bp}`);
 		}
 
 		// Dice roll button visibility
@@ -1621,6 +1706,18 @@ async function main() {
 		}
 	}
 
+	function updateLeaderboard() {
+		for (let i = 0; i < 10; i++) {
+			if (i < leaderboardScores.length) {
+				const s = leaderboardScores[i];
+				const typeLabel = s.winType === 'backgammon' ? ' BG' : s.winType === 'gammon' ? ' G' : '';
+				setText('leaderboard', `lb-${i}`, `${i + 1}. ${s.score} pts${typeLabel} (${s.mode}) ${s.date}`);
+			} else {
+				setText('leaderboard', `lb-${i}`, `${i + 1}. ---`);
+			}
+		}
+	}
+
 	function showToast(msg: string) {
 		setText('toast', 'toast-text', msg);
 		setVis('toast', true);
@@ -1661,6 +1758,7 @@ async function main() {
 		skins: { required: [PanelUI, PanelDocument], where: [eq(PanelUI, 'config', './ui/skins.json')] },
 		countdown: { required: [PanelUI, PanelDocument], where: [eq(PanelUI, 'config', './ui/countdown.json')] },
 		diceroll: { required: [PanelUI, PanelDocument], where: [eq(PanelUI, 'config', './ui/diceroll.json')] },
+		leaderboard: { required: [PanelUI, PanelDocument], where: [eq(PanelUI, 'config', './ui/leaderboard.json')] },
 	}) {
 		init() {
 			this.queries.title.subscribe('qualify', (entity) => {
@@ -1789,6 +1887,13 @@ async function main() {
 				back?.addEventListener('click', () => { audio.click(); showScreen('title'); });
 			});
 
+			this.queries.leaderboard.subscribe('qualify', (entity) => {
+				const doc = PanelDocument.data.document[entity.index] as UIKitDocument;
+				if (!doc) return;
+				const back = doc.getElementById('btn-back') as UIKit.Text | undefined;
+				back?.addEventListener('click', () => { audio.click(); showScreen('title'); });
+			});
+
 			this.queries.diceroll.subscribe('qualify', (entity) => {
 				const doc = PanelDocument.data.document[entity.index] as UIKitDocument;
 				if (!doc) return;
@@ -1891,6 +1996,14 @@ async function main() {
 				if (bgState.currentPlayer === 'white' && bgState.gamePhase === 'rolling') {
 					doRoll();
 				}
+			}
+			if (kb.getKeyDown('Enter') && gameState === 'playing') {
+				if (bgState.currentPlayer === 'white' && bgState.gamePhase === 'rolling') {
+					doRoll();
+				}
+			}
+			if (kb.getKeyDown('KeyU') && gameState === 'playing') {
+				undoMove();
 			}
 			if (kb.getKeyDown('KeyR') && gameState === 'gameOver') {
 				startGame();

@@ -111,7 +111,7 @@
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "Space - Roll dice"
+              "Space/Enter - Roll dice"
             ],
             "properties": {
               "fontsize": "5",
@@ -135,7 +135,7 @@
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "Esc/P - Pause"
+              "U - Undo move (Practice)"
             ],
             "properties": {
               "fontsize": "5",
@@ -147,13 +147,25 @@
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "R - Rematch (game over)"
+              "Esc/P - Pause"
             ],
             "properties": {
               "fontsize": "5",
               "color": "#dddddd"
             },
             "dataUid": "uid-14"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "R - Rematch (game over)"
+            ],
+            "properties": {
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-15"
           },
           {
             "sourceTag": "text",
@@ -167,7 +179,7 @@
               "color": "#ffdd44",
               "margintop": "3"
             },
-            "dataUid": "uid-15"
+            "dataUid": "uid-16"
           },
           {
             "sourceTag": "text",
@@ -179,7 +191,7 @@
               "fontsize": "5",
               "color": "#dddddd"
             },
-            "dataUid": "uid-16"
+            "dataUid": "uid-17"
           },
           {
             "sourceTag": "text",
@@ -191,7 +203,7 @@
               "fontsize": "5",
               "color": "#dddddd"
             },
-            "dataUid": "uid-17"
+            "dataUid": "uid-18"
           },
           {
             "sourceTag": "text",
@@ -203,13 +215,13 @@
               "fontsize": "5",
               "color": "#dddddd"
             },
-            "dataUid": "uid-18"
+            "dataUid": "uid-19"
           },
           {
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "WINNING"
+              "SCORING"
             ],
             "properties": {
               "fontsize": "6",
@@ -217,7 +229,7 @@
               "color": "#ffdd44",
               "margintop": "3"
             },
-            "dataUid": "uid-19"
+            "dataUid": "uid-20"
           },
           {
             "sourceTag": "text",
@@ -229,25 +241,13 @@
               "fontsize": "5",
               "color": "#dddddd"
             },
-            "dataUid": "uid-20"
-          },
-          {
-            "sourceTag": "text",
-            "type": "custom",
-            "children": [
-              "Gammon = 2 points (opponent"
-            ],
-            "properties": {
-              "fontsize": "5",
-              "color": "#dddddd"
-            },
             "dataUid": "uid-21"
           },
           {
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "bears off none)"
+              "Gammon = 2x (0 borne off)"
             ],
             "properties": {
               "fontsize": "5",
@@ -259,7 +259,7 @@
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "Backgammon = 3 points (opponent"
+              "Backgammon = 3x (in your home)"
             ],
             "properties": {
               "fontsize": "5",
@@ -271,13 +271,63 @@
             "sourceTag": "text",
             "type": "custom",
             "children": [
-              "has checkers in your home)"
+              "Doubling cube multiplies all"
             ],
             "properties": {
               "fontsize": "5",
               "color": "#dddddd"
             },
             "dataUid": "uid-24"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "PIP COUNT"
+            ],
+            "properties": {
+              "fontsize": "6",
+              "fontweight": "bold",
+              "color": "#ffdd44",
+              "margintop": "3"
+            },
+            "dataUid": "uid-25"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "HUD shows pip counts (total"
+            ],
+            "properties": {
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-26"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "distance to bear off). Lower"
+            ],
+            "properties": {
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-27"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "is better!"
+            ],
+            "properties": {
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-28"
           }
         ],
         "properties": {
@@ -306,7 +356,7 @@
           "cursor": "pointer",
           "margintop": "4"
         },
-        "dataUid": "uid-25"
+        "dataUid": "uid-29"
       }
     ],
     "properties": {
@@ -326,7 +376,7 @@
         "column": 0
       },
       "end": {
-        "line": 26,
+        "line": 30,
         "column": 12
       }
     },
@@ -346,7 +396,7 @@
         "column": 2
       },
       "end": {
-        "line": 24,
+        "line": 28,
         "column": 14
       }
     },
@@ -427,7 +477,7 @@
       },
       "end": {
         "line": 10,
-        "column": 63
+        "column": 69
       }
     },
     "uid-12": {
@@ -447,7 +497,7 @@
       },
       "end": {
         "line": 12,
-        "column": 59
+        "column": 70
       }
     },
     "uid-14": {
@@ -457,7 +507,7 @@
       },
       "end": {
         "line": 13,
-        "column": 69
+        "column": 59
       }
     },
     "uid-15": {
@@ -467,7 +517,7 @@
       },
       "end": {
         "line": 14,
-        "column": 89
+        "column": 69
       }
     },
     "uid-16": {
@@ -477,7 +527,7 @@
       },
       "end": {
         "line": 15,
-        "column": 74
+        "column": 89
       }
     },
     "uid-17": {
@@ -487,7 +537,7 @@
       },
       "end": {
         "line": 16,
-        "column": 68
+        "column": 74
       }
     },
     "uid-18": {
@@ -497,7 +547,7 @@
       },
       "end": {
         "line": 17,
-        "column": 55
+        "column": 68
       }
     },
     "uid-19": {
@@ -507,7 +557,7 @@
       },
       "end": {
         "line": 18,
-        "column": 85
+        "column": 55
       }
     },
     "uid-20": {
@@ -517,7 +567,7 @@
       },
       "end": {
         "line": 19,
-        "column": 66
+        "column": 85
       }
     },
     "uid-21": {
@@ -527,7 +577,7 @@
       },
       "end": {
         "line": 20,
-        "column": 73
+        "column": 66
       }
     },
     "uid-22": {
@@ -537,7 +587,7 @@
       },
       "end": {
         "line": 21,
-        "column": 63
+        "column": 71
       }
     },
     "uid-23": {
@@ -547,7 +597,7 @@
       },
       "end": {
         "line": 22,
-        "column": 77
+        "column": 76
       }
     },
     "uid-24": {
@@ -562,11 +612,51 @@
     },
     "uid-25": {
       "start": {
+        "line": 24,
+        "column": 4
+      },
+      "end": {
+        "line": 24,
+        "column": 87
+      }
+    },
+    "uid-26": {
+      "start": {
         "line": 25,
-        "column": 2
+        "column": 4
       },
       "end": {
         "line": 25,
+        "column": 73
+      }
+    },
+    "uid-27": {
+      "start": {
+        "line": 26,
+        "column": 4
+      },
+      "end": {
+        "line": 26,
+        "column": 74
+      }
+    },
+    "uid-28": {
+      "start": {
+        "line": 27,
+        "column": 4
+      },
+      "end": {
+        "line": 27,
+        "column": 56
+      }
+    },
+    "uid-29": {
+      "start": {
+        "line": 29,
+        "column": 2
+      },
+      "end": {
+        "line": 29,
         "column": 188
       }
     }
