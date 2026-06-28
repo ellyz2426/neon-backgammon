@@ -1,0 +1,14 @@
+<container name="root" flexDirection="column" alignItems="center" gap="8" padding="12">
+  <text name="title-text" fontSize="18" fontWeight="bold" color="#00ffff">NEON BACKGAMMON</text>
+  <text name="subtitle-text" fontSize="8" color="#88cccc">Holodeck Board Game</text>
+  <text name="level-text" fontSize="7" color="#aadddd">Lv.1 Novice</text>
+  <container flexDirection="column" gap="5" alignItems="center" marginTop="8">
+    <text name="btn-play" fontSize="10" color="#00ffff" backgroundColor="#003344" padding="6" borderRadius="3" borderColor="#00ffff" borderWidth="1" cursor="pointer">PLAY</text>
+    <text name="btn-scores" fontSize="8" color="#44aacc" backgroundColor="#002233" padding="4" borderRadius="3" borderColor="#44aacc" borderWidth="1" cursor="pointer">SCORES</text>
+    <text name="btn-achievements" fontSize="8" color="#ffdd44" backgroundColor="#332200" padding="4" borderRadius="3" borderColor="#ffdd44" borderWidth="1" cursor="pointer">ACHIEVEMENTS</text>
+    <text name="btn-stats" fontSize="8" color="#44ff44" backgroundColor="#003300" padding="4" borderRadius="3" borderColor="#44ff44" borderWidth="1" cursor="pointer">STATS</text>
+    <text name="btn-skins" fontSize="8" color="#ff44cc" backgroundColor="#330022" padding="4" borderRadius="3" borderColor="#ff44cc" borderWidth="1" cursor="pointer">PIECE SKINS</text>
+    <text name="btn-settings" fontSize="8" color="#aaaacc" backgroundColor="#222233" padding="4" borderRadius="3" borderColor="#aaaacc" borderWidth="1" cursor="pointer">SETTINGS</text>
+    <text name="btn-help" fontSize="8" color="#aaaacc" backgroundColor="#222233" padding="4" borderRadius="3" borderColor="#aaaacc" borderWidth="1" cursor="pointer">HELP</text>
+  </container>
+</container>

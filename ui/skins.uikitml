@@ -1,0 +1,14 @@
+<container name="root" flexDirection="column" alignItems="center" gap="3" padding="8">
+  <text fontSize="12" fontWeight="bold" color="#ff44cc">PIECE SKINS</text>
+  <container flexDirection="column" gap="2" marginTop="4" alignItems="flex-start">
+    <text name="btn-skin-0" fontSize="6" color="#00eeff" backgroundColor="#002233" padding="3" borderRadius="2" cursor="pointer">&gt; Classic Neon (default)</text>
+    <text name="btn-skin-1" fontSize="6" color="#ff8800" backgroundColor="#221100" padding="3" borderRadius="2" cursor="pointer">  Solar Flare (50 games)</text>
+    <text name="btn-skin-2" fontSize="6" color="#88ccff" backgroundColor="#112233" padding="3" borderRadius="2" cursor="pointer">  Frost Core (5K score)</text>
+    <text name="btn-skin-3" fontSize="6" color="#44ff44" backgroundColor="#003300" padding="3" borderRadius="2" cursor="pointer">  Toxic Pulse (10 wins)</text>
+    <text name="btn-skin-4" fontSize="6" color="#ff44cc" backgroundColor="#330022" padding="3" borderRadius="2" cursor="pointer">  Plasma Pink (x5 combo)</text>
+    <text name="btn-skin-5" fontSize="6" color="#ffdd44" backgroundColor="#332200" padding="3" borderRadius="2" cursor="pointer">  Royal Gold (gammon win)</text>
+    <text name="btn-skin-6" fontSize="6" color="#aa44ff" backgroundColor="#220044" padding="3" borderRadius="2" cursor="pointer">  Void Purple (25 games)</text>
+    <text name="btn-skin-7" fontSize="6" color="#ff4400" backgroundColor="#330000" padding="3" borderRadius="2" cursor="pointer">  Inferno (all modes)</text>
+  </container>
+  <text name="btn-back" fontSize="7" color="#888888" backgroundColor="#222222" padding="4" borderRadius="3" borderColor="#666666" borderWidth="1" cursor="pointer" marginTop="4">BACK</text>
+</container>

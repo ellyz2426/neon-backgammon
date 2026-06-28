@@ -1,0 +1,9 @@
+<container name="root" flexDirection="column" alignItems="center" gap="3" padding="6">
+  <text name="player-text" fontSize="8" fontWeight="bold" color="#00ffff">YOUR TURN</text>
+  <text name="dice-text" fontSize="7" color="#dddddd">Roll dice</text>
+  <text name="moves-text" fontSize="6" color="#aadddd">Moves left: 0</text>
+  <text name="score-text" fontSize="6" color="#ffdd44">Match: 0 - 0</text>
+  <text name="borne-text" fontSize="6" color="#44ff44">Borne off: 0 / 0</text>
+  <text name="cube-text" fontSize="6" color="#ff8844">Cube: x1</text>
+  <text name="timer-text" fontSize="6" color="#aaaacc">Mode: single</text>
+</container>

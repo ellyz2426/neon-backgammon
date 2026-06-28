@@ -1,0 +1,12 @@
+<container name="root" flexDirection="column" alignItems="center" gap="5" padding="10">
+  <text name="result-text" fontSize="16" fontWeight="bold" color="#00ffff">YOU WIN!</text>
+  <text name="type-text" fontSize="10" color="#ffdd44">Normal win</text>
+  <text name="points-text" fontSize="8" color="#44ff44">Points: 1</text>
+  <text name="moves-text" fontSize="7" color="#dddddd">Moves: 0</text>
+  <text name="match-text" fontSize="7" color="#aadddd">Match: 0 - 0</text>
+  <text name="xp-text" fontSize="8" color="#ff8844">+50 XP</text>
+  <container flexDirection="row" gap="8" marginTop="8">
+    <text name="btn-rematch" fontSize="9" color="#44ff44" backgroundColor="#003300" padding="5" borderRadius="3" borderColor="#44ff44" borderWidth="1" cursor="pointer">REMATCH</text>
+    <text name="btn-menu" fontSize="9" color="#aaaacc" backgroundColor="#222233" padding="5" borderRadius="3" borderColor="#aaaacc" borderWidth="1" cursor="pointer">MENU</text>
+  </container>
+</container>

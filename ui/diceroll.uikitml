@@ -1,0 +1,4 @@
+<container name="root" flexDirection="column" alignItems="center" gap="4" padding="6">
+  <text name="btn-roll" fontSize="10" fontWeight="bold" color="#00ffff" backgroundColor="#003344" padding="5" borderRadius="4" borderColor="#00ffff" borderWidth="1" cursor="pointer">ROLL DICE</text>
+  <text name="roll-text" fontSize="7" color="#aadddd"></text>
+</container>

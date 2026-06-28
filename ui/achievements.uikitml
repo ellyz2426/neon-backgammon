@@ -1,0 +1,36 @@
+<container name="root" flexDirection="column" alignItems="center" gap="3" padding="8">
+  <text fontSize="12" fontWeight="bold" color="#ffdd44">ACHIEVEMENTS</text>
+  <container flexDirection="column" gap="2" marginTop="4" alignItems="flex-start">
+    <text name="ach-0" fontSize="5" color="#dddddd">[ ] First Victory</text>
+    <text name="ach-1" fontSize="5" color="#dddddd">[ ] Champion</text>
+    <text name="ach-2" fontSize="5" color="#dddddd">[ ] Grandmaster</text>
+    <text name="ach-3" fontSize="5" color="#dddddd">[ ] Gammon!</text>
+    <text name="ach-4" fontSize="5" color="#dddddd">[ ] Backgammon!</text>
+    <text name="ach-5" fontSize="5" color="#dddddd">[ ] Lucky Dice</text>
+    <text name="ach-6" fontSize="5" color="#dddddd">[ ] Double Trouble</text>
+    <text name="ach-7" fontSize="5" color="#dddddd">[ ] Bear It Off</text>
+    <text name="ach-8" fontSize="5" color="#dddddd">[ ] Bearing Master</text>
+    <text name="ach-9" fontSize="5" color="#dddddd">[ ] Aggressive</text>
+    <text name="ach-10" fontSize="5" color="#dddddd">[ ] Blitz Attack</text>
+    <text name="ach-11" fontSize="5" color="#dddddd">[ ] Hot Streak</text>
+    <text name="ach-12" fontSize="5" color="#dddddd">[ ] On Fire</text>
+    <text name="ach-13" fontSize="5" color="#dddddd">[ ] Flawless</text>
+    <text name="ach-14" fontSize="5" color="#dddddd">[ ] Regular</text>
+    <text name="ach-15" fontSize="5" color="#dddddd">[ ] Veteran</text>
+    <text name="ach-16" fontSize="5" color="#dddddd">[ ] Point Collector</text>
+    <text name="ach-17" fontSize="5" color="#dddddd">[ ] Point Hoarder</text>
+    <text name="ach-18" fontSize="5" color="#dddddd">[ ] Rising Star</text>
+    <text name="ach-19" fontSize="5" color="#dddddd">[ ] Expert</text>
+    <text name="ach-20" fontSize="5" color="#dddddd">[ ] Legend</text>
+    <text name="ach-21" fontSize="5" color="#dddddd">[ ] Explorer</text>
+    <text name="ach-22" fontSize="5" color="#dddddd">[ ] Match Victor</text>
+    <text name="ach-23" fontSize="5" color="#dddddd">[ ] Match King</text>
+    <text name="ach-24" fontSize="5" color="#dddddd">[ ] Experienced</text>
+    <text name="ach-25" fontSize="5" color="#dddddd">[ ] Daily Player</text>
+    <text name="ach-26" fontSize="5" color="#dddddd">[ ] Fashionista</text>
+    <text name="ach-27" fontSize="5" color="#dddddd">[ ] Theme Tourist</text>
+    <text name="ach-28" fontSize="5" color="#dddddd">[ ] Dedicated</text>
+    <text name="ach-29" fontSize="5" color="#dddddd">[ ] Speed Demon</text>
+  </container>
+  <text name="btn-back" fontSize="7" color="#888888" backgroundColor="#222222" padding="4" borderRadius="3" borderColor="#666666" borderWidth="1" cursor="pointer" marginTop="4">BACK</text>
+</container>

@@ -1,0 +1,16 @@
+<container name="root" flexDirection="column" alignItems="center" gap="3" padding="8">
+  <text fontSize="12" fontWeight="bold" color="#44ff44">STATS</text>
+  <container flexDirection="column" gap="2" marginTop="4" alignItems="flex-start">
+    <text name="stat-0" fontSize="6" color="#dddddd">Games: 0</text>
+    <text name="stat-1" fontSize="6" color="#dddddd">Wins: 0</text>
+    <text name="stat-2" fontSize="6" color="#dddddd">Losses: 0</text>
+    <text name="stat-3" fontSize="6" color="#dddddd">Win rate: 0%</text>
+    <text name="stat-4" fontSize="6" color="#dddddd">Total moves: 0</text>
+    <text name="stat-5" fontSize="6" color="#dddddd">Hits landed: 0</text>
+    <text name="stat-6" fontSize="6" color="#dddddd">Bear offs: 0</text>
+    <text name="stat-7" fontSize="6" color="#dddddd">Best streak: 0</text>
+    <text name="stat-8" fontSize="6" color="#dddddd">Gammons: 0</text>
+    <text name="stat-9" fontSize="6" color="#dddddd">Level: 1</text>
+  </container>
+  <text name="btn-back" fontSize="7" color="#888888" backgroundColor="#222222" padding="4" borderRadius="3" borderColor="#666666" borderWidth="1" cursor="pointer" marginTop="4">BACK</text>
+</container>

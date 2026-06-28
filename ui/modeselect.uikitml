@@ -1,0 +1,14 @@
+<container name="root" flexDirection="column" alignItems="center" gap="6" padding="10">
+  <text fontSize="14" fontWeight="bold" color="#00ffff">SELECT MODE</text>
+  <container flexDirection="column" gap="4" alignItems="center" marginTop="6">
+    <text name="btn-single" fontSize="9" color="#00ffff" backgroundColor="#003344" padding="5" borderRadius="3" borderColor="#00ffff" borderWidth="1" cursor="pointer">Single Game</text>
+    <text name="btn-match3" fontSize="9" color="#44ff44" backgroundColor="#003300" padding="5" borderRadius="3" borderColor="#44ff44" borderWidth="1" cursor="pointer">Match to 3</text>
+    <text name="btn-match5" fontSize="9" color="#ffdd44" backgroundColor="#332200" padding="5" borderRadius="3" borderColor="#ffdd44" borderWidth="1" cursor="pointer">Match to 5</text>
+    <text name="btn-daily" fontSize="9" color="#ff8844" backgroundColor="#331100" padding="5" borderRadius="3" borderColor="#ff8844" borderWidth="1" cursor="pointer">Daily Challenge</text>
+    <text name="btn-blitz" fontSize="9" color="#ff4444" backgroundColor="#330000" padding="5" borderRadius="3" borderColor="#ff4444" borderWidth="1" cursor="pointer">Blitz (30s)</text>
+    <text name="btn-practice" fontSize="9" color="#aaaacc" backgroundColor="#222233" padding="5" borderRadius="3" borderColor="#aaaacc" borderWidth="1" cursor="pointer">Practice</text>
+    <text name="btn-nackgammon" fontSize="9" color="#aa44ff" backgroundColor="#220044" padding="5" borderRadius="3" borderColor="#aa44ff" borderWidth="1" cursor="pointer">Nackgammon</text>
+    <text name="btn-hypergammon" fontSize="9" color="#ff44cc" backgroundColor="#330022" padding="5" borderRadius="3" borderColor="#ff44cc" borderWidth="1" cursor="pointer">Hypergammon</text>
+  </container>
+  <text name="btn-back" fontSize="8" color="#888888" backgroundColor="#222222" padding="4" borderRadius="3" borderColor="#666666" borderWidth="1" cursor="pointer" marginTop="6">BACK</text>
+</container>
