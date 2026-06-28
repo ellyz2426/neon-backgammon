@@ -497,31 +497,75 @@ function aiSelectMove(state: BackgammonState, difficulty: string): number[] | nu
 		return validSingle[Math.floor(Math.random() * validSingle.length)];
 	}
 
-	// Medium/Hard: evaluate all possible move sequences
+	// Medium/Hard: evaluate using full-turn look-ahead
+	// For Hard: evaluate all sequences of remaining dice, pick the overall best single move
+	// that leads to the best complete turn evaluation
 	let bestScore = -Infinity;
 	let bestMove: number[] | null = null;
 
-	for (const die of state.remainingMoves) {
-		const legalMoves = getLegalMoves(state, die);
-		for (const move of legalMoves) {
-			// Clone state and apply
-			const cloned = cloneState(state);
-			applyMove(cloned, move[0], move[1]);
+	if (difficulty === 'Hard' && state.remainingMoves.length > 1) {
+		// Full-turn evaluation: try each first move, then recursively evaluate best remaining
+		for (const die of new Set(state.remainingMoves)) {
+			const legalMoves = getLegalMoves(state, die);
+			for (const move of legalMoves) {
+				const cloned = cloneState(state);
+				applyMove(cloned, move[0], move[1]);
+				const idx = cloned.remainingMoves.indexOf(die);
+				if (idx >= 0) cloned.remainingMoves.splice(idx, 1);
 
-			let score = evaluateBoard(cloned, state.currentPlayer);
+				// Recursively evaluate remaining moves
+				let turnScore = evaluateFullTurn(cloned, state.currentPlayer, 0);
 
-			// Add noise for medium difficulty
-			if (difficulty === 'Medium') {
-				score += (Math.random() - 0.5) * 40;
+				if (turnScore > bestScore) {
+					bestScore = turnScore;
+					bestMove = [...move, die];
+				}
 			}
+		}
+	} else {
+		// Single move evaluation (Medium or last move)
+		for (const die of state.remainingMoves) {
+			const legalMoves = getLegalMoves(state, die);
+			for (const move of legalMoves) {
+				const cloned = cloneState(state);
+				applyMove(cloned, move[0], move[1]);
 
-			if (score > bestScore) {
-				bestScore = score;
-				bestMove = [...move, die];
+				let score = evaluateBoard(cloned, state.currentPlayer);
+
+				if (difficulty === 'Medium') {
+					score += (Math.random() - 0.5) * 40;
+				}
+
+				if (score > bestScore) {
+					bestScore = score;
+					bestMove = [...move, die];
+				}
 			}
 		}
 	}
+
 	return bestMove;
+}
+
+function evaluateFullTurn(state: BackgammonState, player: PieceColor, depth: number): number {
+	if (state.remainingMoves.length === 0 || depth > 3) {
+		return evaluateBoard(state, player);
+	}
+
+	let bestScore = evaluateBoard(state, player); // Baseline if no moves work
+
+	for (const die of new Set(state.remainingMoves)) {
+		const legalMoves = getLegalMoves(state, die);
+		for (const move of legalMoves) {
+			const cloned = cloneState(state);
+			applyMove(cloned, move[0], move[1]);
+			const idx = cloned.remainingMoves.indexOf(die);
+			if (idx >= 0) cloned.remainingMoves.splice(idx, 1);
+			const score = evaluateFullTurn(cloned, player, depth + 1);
+			if (score > bestScore) bestScore = score;
+		}
+	}
+	return bestScore;
 }
 
 function getAllPossiblePlays(state: BackgammonState): number[][] {
@@ -561,6 +605,24 @@ function calcPipCount(state: BackgammonState, player: PieceColor): number {
 	}
 	pips += state.bar[player] * 25;
 	return pips;
+}
+
+function canDouble(state: BackgammonState, player: PieceColor): boolean {
+	// Can double if cube is centered (no owner) or player owns it
+	// And cube value is under 64 (practical limit)
+	if (state.doublingCube >= 64) return false;
+	return state.cubeOwner === null || state.cubeOwner === player;
+}
+
+function aiAcceptsDouble(state: BackgammonState): boolean {
+	// AI evaluates position to decide whether to accept a double
+	const aiScore = evaluateBoard(state, 'black');
+	const playerScore = evaluateBoard(state, 'white');
+	const diff = aiScore - playerScore;
+	// Accept if not too far behind (threshold based on difficulty)
+	// In backgammon theory, you should accept if you win >= 25% of the time
+	// We approximate this with the evaluation difference
+	return diff > -200;
 }
 
 // ============================
@@ -1382,7 +1444,19 @@ async function main() {
 		highlightedMoves = [];
 
 		if (bgState.currentPlayer === 'black') {
-			aiThinkTimer = 0.5; // AI delay
+			// AI might double before rolling (small chance if position is strong)
+			if (canDouble(bgState, 'black') && bgState.movesMade > 4) {
+				const aiEval = evaluateBoard(bgState, 'black');
+				const playerEval = evaluateBoard(bgState, 'white');
+				if (aiEval - playerEval > 150 && Math.random() < 0.3) {
+					setTimeout(() => handleAIDouble(), 300);
+					aiThinkTimer = 1.5;
+				} else {
+					aiThinkTimer = 0.5;
+				}
+			} else {
+				aiThinkTimer = 0.5;
+			}
 		}
 
 		renderBoard();
@@ -1488,6 +1562,52 @@ async function main() {
 	// ============================
 	// GAME FLOW
 	// ============================
+
+	function handlePlayerDouble() {
+		if (!canDouble(bgState, 'white')) return;
+		const newCubeValue = bgState.doublingCube * 2;
+		showToast(`Doubling to ${newCubeValue}x...`);
+		audio.diceRoll();
+		particles.burst(0, 1.0, 0.65, 0xffdd44, 8);
+
+		// AI decides
+		setTimeout(() => {
+			if (aiAcceptsDouble(bgState)) {
+				bgState.doublingCube = newCubeValue;
+				bgState.cubeOwner = 'black';
+				showToast(`AI accepts! Cube: ${newCubeValue}x`);
+				cubeMesh.scale.set(1 + Math.log2(newCubeValue) * 0.1, 1 + Math.log2(newCubeValue) * 0.1, 1 + Math.log2(newCubeValue) * 0.1);
+				updateHUD();
+			} else {
+				// AI declines — player wins with current cube value
+				showToast(`AI declines! You win ${bgState.doublingCube} pt${bgState.doublingCube > 1 ? 's' : ''}`);
+				setTimeout(() => endGame('white'), 800);
+			}
+		}, 600);
+	}
+
+	function handleAIDouble() {
+		if (!canDouble(bgState, 'black')) return;
+		const newCubeValue = bgState.doublingCube * 2;
+		showToast(`AI doubles to ${newCubeValue}x!`);
+		audio.diceRoll();
+		particles.burst(0, 1.0, 0.65, 0xffdd44, 8);
+		// Auto-accept for player (in a real game you'd prompt, but this keeps flow smooth)
+		// Player always accepts if they have >= 25% chance (reasonable approximation)
+		const playerScore = evaluateBoard(bgState, 'white');
+		const aiScore = evaluateBoard(bgState, 'black');
+		if (playerScore - aiScore > -300) {
+			bgState.doublingCube = newCubeValue;
+			bgState.cubeOwner = 'white';
+			setTimeout(() => showToast(`Cube accepted: ${newCubeValue}x`), 600);
+			updateHUD();
+		} else {
+			setTimeout(() => {
+				showToast(`Too risky! AI wins ${bgState.doublingCube} pt${bgState.doublingCube > 1 ? 's' : ''}`);
+				setTimeout(() => endGame('black'), 800);
+			}, 600);
+		}
+	}
 
 	function startGame() {
 		bgState = newGame(config.mode);
@@ -1709,6 +1829,9 @@ async function main() {
 		// Dice roll button visibility
 		const showRoll = bgState.currentPlayer === 'white' && bgState.gamePhase === 'rolling';
 		setText('diceroll', 'roll-text', showRoll ? 'ROLL DICE' : '');
+		// Doubling button - show only when player can double before rolling
+		const showDouble = showRoll && canDouble(bgState, 'white') && bgState.movesMade > 0;
+		setText('diceroll', 'btn-double', showDouble ? 'DOUBLE' : '');
 	}
 
 	function updateGameOver(winner: PieceColor, winType: string, points: number) {
@@ -1952,6 +2075,15 @@ async function main() {
 					if (bgState.currentPlayer === 'white' && bgState.gamePhase === 'rolling' && gameState === 'playing') {
 						audio.click();
 						doRoll();
+					}
+				});
+				const doubleEl = doc.getElementById('btn-double') as UIKit.Text | undefined;
+				doubleEl?.addEventListener('click', () => {
+					if (bgState.currentPlayer === 'white' && bgState.gamePhase === 'rolling' && gameState === 'playing') {
+						if (canDouble(bgState, 'white')) {
+							audio.click();
+							handlePlayerDouble();
+						}
 					}
 				});
 			});

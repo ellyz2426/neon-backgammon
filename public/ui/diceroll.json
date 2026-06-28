@@ -26,13 +26,33 @@
       {
         "sourceTag": "text",
         "type": "custom",
+        "children": [
+          "DOUBLE"
+        ],
+        "properties": {
+          "name": "btn-double",
+          "fontsize": "8",
+          "fontweight": "bold",
+          "color": "#ffdd44",
+          "backgroundcolor": "#332200",
+          "padding": "4",
+          "borderradius": "3",
+          "bordercolor": "#ffdd44",
+          "borderwidth": "1",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "text",
+        "type": "custom",
         "children": [],
         "properties": {
           "name": "roll-text",
           "fontsize": "7",
           "color": "#aadddd"
         },
-        "dataUid": "uid-3"
+        "dataUid": "uid-4"
       }
     ],
     "properties": {
@@ -52,7 +72,7 @@
         "column": 0
       },
       "end": {
-        "line": 3,
+        "line": 4,
         "column": 12
       }
     },
@@ -73,6 +93,16 @@
       },
       "end": {
         "line": 2,
+        "column": 196
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 3,
+        "column": 2
+      },
+      "end": {
+        "line": 3,
         "column": 61
       }
     }
