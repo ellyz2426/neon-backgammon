@@ -160,6 +160,16 @@ const ACHIEVEMENTS: Achievement[] = [
 	{ id: 'theme_all', name: 'Theme Tourist', desc: 'Try all themes', condition: s => s.themeIndex >= THEMES.length - 1 },
 	{ id: 'time_60', name: 'Dedicated', desc: 'Play for 60 minutes total', condition: s => s.totalTime >= 3600 },
 	{ id: 'blitz_win', name: 'Speed Demon', desc: 'Win a blitz game', condition: s => s.modesPlayed.includes('blitz') && s.wins > 0 },
+	{ id: 'streak_10', name: 'Unstoppable', desc: 'Win 10 games in a row', condition: s => s.longestWinStreak >= 10 },
+	{ id: 'hits_100', name: 'Demolition', desc: 'Hit 100 opponent checkers', condition: s => s.hitsLanded >= 100 },
+	{ id: 'bear_500', name: 'Bear Master', desc: 'Bear off 500 checkers', condition: s => s.bearOffs >= 500 },
+	{ id: 'games_100', name: 'Centurion', desc: 'Play 100 games', condition: s => s.games >= 100 },
+	{ id: 'score_10k', name: 'Point Legend', desc: 'Earn 10000 total points', condition: s => s.totalPoints >= 10000 },
+	{ id: 'doubles_50', name: 'Snake Eyes', desc: 'Roll doubles 50 times', condition: s => s.doublesRolled >= 50 },
+	{ id: 'match_10', name: 'Match Emperor', desc: 'Win 10 matches', condition: s => s.matchWins >= 10 },
+	{ id: 'moves_2000', name: 'Grandmaster', desc: 'Make 2000 total moves', condition: s => s.totalMoves >= 2000 },
+	{ id: 'time_300', name: 'Marathon', desc: 'Play for 5 hours total', condition: s => s.totalTime >= 18000 },
+	{ id: 'gammons_5', name: 'Gammon Hunter', desc: 'Win 5 gammons', condition: s => s.gammons >= 5 },
 ];
 
 const LEVEL_TITLES = ['Novice', 'Beginner', 'Apprentice', 'Student', 'Player', 'Competitor', 'Contender', 'Challenger', 'Strategist', 'Tactician', 'Expert', 'Master', 'Grandmaster', 'Champion', 'Elite', 'Virtuoso', 'Prodigy', 'Legend', 'Mythic', 'NEON GOD'];
@@ -755,6 +765,8 @@ async function main() {
 	let moveHistory: BackgammonState[] = [];
 	let undoAvailable = false;
 	let leaderboardScores: { mode: string; score: number; date: string; winType: string }[] = [];
+	let moveAnim: { fromPos: Vector3; toPos: Vector3; progress: number; checkerIdx: number; duration: number } | null = null;
+	let hoveredPoint = -2;
 
 	// Load leaderboard
 	try {
@@ -1071,6 +1083,8 @@ async function main() {
 				// Highlight selected
 				if (selectedPoint === i) {
 					(cm.glow.material as MeshBasicMaterial).opacity = 0.6;
+				} else if (hoveredPoint === i && pointOwner(bgState.board[i]) === 'white') {
+					(cm.glow.material as MeshBasicMaterial).opacity = 0.45;
 				} else {
 					(cm.glow.material as MeshBasicMaterial).opacity = 0.3;
 				}
@@ -1278,6 +1292,11 @@ async function main() {
 						undoAvailable = true;
 					}
 					// Execute move!
+					// Capture positions for move animation
+					const fromPos = from === -1
+						? new Vector3(0, 0.06, bgState.currentPlayer === 'white' ? 0.3 : -0.3)
+						: getPointWorldPos(from).clone();
+					fromPos.y += 0.008;
 					const result = applyMove(bgState, from, to);
 					bgState.movesMade++;
 					save.totalMoves++;
@@ -1300,6 +1319,31 @@ async function main() {
 
 					selectedPoint = -2;
 					highlightedMoves = [];
+
+					// Trigger move animation
+					renderBoard();
+					// Find the checker at 'to' and animate it from the old position
+					if (to !== 24 && to !== -2) {
+						const toPos = getPointWorldPos(to).clone();
+						const val = bgState.board[to];
+						const count = pieceCount(val);
+						const stackDir = to < 12 ? -1 : 1;
+						toPos.z += stackDir * (Math.min(count, 5) - 1) * 0.08;
+						toPos.y += 0.008;
+						// Find the top checker at this point
+						for (let ci = checkerMeshes.length - 1; ci >= 0; ci--) {
+							const cm = checkerMeshes[ci];
+							if (cm.mesh.visible) {
+								const dx = Math.abs(cm.mesh.position.x - toPos.x);
+								const dz = Math.abs(cm.mesh.position.z - toPos.z);
+								if (dx < 0.02 && dz < 0.02) {
+									moveAnim = { fromPos: fromPos.clone(), toPos: cm.mesh.position.clone(), progress: 0, checkerIdx: ci, duration: 0.25 };
+									cm.mesh.position.copy(fromPos);
+									break;
+								}
+							}
+						}
+					}
 
 					// Check game over
 					const winner = isGameOver(bgState);
@@ -1478,6 +1522,9 @@ async function main() {
 		audio.startDrone();
 		renderBoard();
 		updateHUD();
+		if (config.mode === 'practice') {
+			setTimeout(() => showToast('Practice: press U to undo'), 500);
+		}
 	}
 
 	function endGame(winner: PieceColor) {
@@ -1674,11 +1721,14 @@ async function main() {
 	}
 
 	function updateAchievements() {
+		let unlockCount = 0;
 		for (let i = 0; i < ACHIEVEMENTS.length; i++) {
 			const a = ACHIEVEMENTS[i];
 			const unlocked = save.achievementsUnlocked.includes(a.id);
+			if (unlocked) unlockCount++;
 			setText('achievements', `ach-${i}`, `${unlocked ? '[x]' : '[ ]'} ${a.name} - ${a.desc}`);
 		}
+		setText('achievements', 'ach-count', `${unlockCount} / ${ACHIEVEMENTS.length}`);
 	}
 
 	function updateSettings() {
@@ -1945,6 +1995,25 @@ async function main() {
 				}
 			}
 
+			// Move animation
+			if (moveAnim) {
+				moveAnim.progress += dt / moveAnim.duration;
+				if (moveAnim.progress >= 1) {
+					moveAnim = null;
+					renderBoard();
+				} else {
+					const t = moveAnim.progress;
+					// Cubic ease-out
+					const ease = 1 - Math.pow(1 - t, 3);
+					const cm = checkerMeshes[moveAnim.checkerIdx];
+					if (cm && cm.mesh.visible) {
+						cm.mesh.position.lerpVectors(moveAnim.fromPos, moveAnim.toPos, ease);
+						// Arc height
+						cm.mesh.position.y += Math.sin(t * Math.PI) * 0.08;
+					}
+				}
+			}
+
 			// Countdown
 			if (gameState === 'countdown') {
 				countdownTimer += dt;
@@ -2031,6 +2100,43 @@ async function main() {
 
 	// Register pointer events
 	world.renderer.domElement.addEventListener('pointerdown', onPointerDown);
+	world.renderer.domElement.addEventListener('contextmenu', (e: Event) => {
+		e.preventDefault();
+		if (gameState === 'playing') {
+			selectedPoint = -2;
+			highlightedMoves = [];
+			renderBoard();
+		}
+	});
+
+	// Hover tracking for visual feedback
+	world.renderer.domElement.addEventListener('pointermove', (event: PointerEvent) => {
+		if (gameState !== 'playing' || bgState.currentPlayer !== 'white' || bgState.gamePhase !== 'moving') {
+			if (hoveredPoint !== -2) { hoveredPoint = -2; }
+			return;
+		}
+		const canvas = world.renderer.domElement;
+		const rect = canvas.getBoundingClientRect();
+		mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+		mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+		raycaster.setFromCamera(mouse, world.camera);
+		const intersects = raycaster.intersectObject(boardMesh, true);
+		if (intersects.length > 0) {
+			const localPoint = boardMesh.worldToLocal(intersects[0].point.clone());
+			let closest = -2;
+			let closestDist = 0.15;
+			for (let i = 0; i < 24; i++) {
+				const pos = getPointWorldPos(i);
+				const dx = localPoint.x - pos.x;
+				const dz = localPoint.z - pos.z;
+				const dist = Math.sqrt(dx * dx + dz * dz);
+				if (dist < closestDist) { closestDist = dist; closest = i; }
+			}
+			hoveredPoint = closest;
+		} else {
+			hoveredPoint = -2;
+		}
+	});
 
 	// Initial state
 	showScreen('title');

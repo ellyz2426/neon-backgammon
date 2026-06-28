@@ -31,6 +31,17 @@
     <text name="ach-27" fontSize="5" color="#dddddd">[ ] Theme Tourist</text>
     <text name="ach-28" fontSize="5" color="#dddddd">[ ] Dedicated</text>
     <text name="ach-29" fontSize="5" color="#dddddd">[ ] Speed Demon</text>
+    <text name="ach-30" fontSize="5" color="#dddddd">[ ] Unstoppable</text>
+    <text name="ach-31" fontSize="5" color="#dddddd">[ ] Demolition</text>
+    <text name="ach-32" fontSize="5" color="#dddddd">[ ] Bear Master</text>
+    <text name="ach-33" fontSize="5" color="#dddddd">[ ] Centurion</text>
+    <text name="ach-34" fontSize="5" color="#dddddd">[ ] Point Legend</text>
+    <text name="ach-35" fontSize="5" color="#dddddd">[ ] Snake Eyes</text>
+    <text name="ach-36" fontSize="5" color="#dddddd">[ ] Match Emperor</text>
+    <text name="ach-37" fontSize="5" color="#dddddd">[ ] Grandmaster</text>
+    <text name="ach-38" fontSize="5" color="#dddddd">[ ] Marathon</text>
+    <text name="ach-39" fontSize="5" color="#dddddd">[ ] Gammon Hunter</text>
   </container>
+  <text name="ach-count" fontSize="6" color="#00ffff" marginTop="3">0 / 40</text>
   <text name="btn-back" fontSize="7" color="#888888" backgroundColor="#222222" padding="4" borderRadius="3" borderColor="#666666" borderWidth="1" cursor="pointer" marginTop="4">BACK</text>
 </container>

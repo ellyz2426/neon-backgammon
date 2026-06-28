@@ -409,6 +409,136 @@
               "color": "#dddddd"
             },
             "dataUid": "uid-33"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Unstoppable"
+            ],
+            "properties": {
+              "name": "ach-30",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-34"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Demolition"
+            ],
+            "properties": {
+              "name": "ach-31",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-35"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Bear Master"
+            ],
+            "properties": {
+              "name": "ach-32",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-36"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Centurion"
+            ],
+            "properties": {
+              "name": "ach-33",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-37"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Point Legend"
+            ],
+            "properties": {
+              "name": "ach-34",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-38"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Snake Eyes"
+            ],
+            "properties": {
+              "name": "ach-35",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-39"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Match Emperor"
+            ],
+            "properties": {
+              "name": "ach-36",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-40"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Grandmaster"
+            ],
+            "properties": {
+              "name": "ach-37",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-41"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Marathon"
+            ],
+            "properties": {
+              "name": "ach-38",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-42"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "[ ] Gammon Hunter"
+            ],
+            "properties": {
+              "name": "ach-39",
+              "fontsize": "5",
+              "color": "#dddddd"
+            },
+            "dataUid": "uid-43"
           }
         ],
         "properties": {
@@ -418,6 +548,20 @@
           "alignitems": "flex-start"
         },
         "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "text",
+        "type": "custom",
+        "children": [
+          "0 / 40"
+        ],
+        "properties": {
+          "name": "ach-count",
+          "fontsize": "6",
+          "color": "#00ffff",
+          "margintop": "3"
+        },
+        "dataUid": "uid-44"
       },
       {
         "sourceTag": "text",
@@ -437,7 +581,7 @@
           "cursor": "pointer",
           "margintop": "4"
         },
-        "dataUid": "uid-34"
+        "dataUid": "uid-45"
       }
     ],
     "properties": {
@@ -457,7 +601,7 @@
         "column": 0
       },
       "end": {
-        "line": 35,
+        "line": 46,
         "column": 12
       }
     },
@@ -477,7 +621,7 @@
         "column": 2
       },
       "end": {
-        "line": 33,
+        "line": 43,
         "column": 14
       }
     },
@@ -783,11 +927,121 @@
     },
     "uid-34": {
       "start": {
+        "line": 33,
+        "column": 4
+      },
+      "end": {
+        "line": 33,
+        "column": 75
+      }
+    },
+    "uid-35": {
+      "start": {
         "line": 34,
-        "column": 2
+        "column": 4
       },
       "end": {
         "line": 34,
+        "column": 74
+      }
+    },
+    "uid-36": {
+      "start": {
+        "line": 35,
+        "column": 4
+      },
+      "end": {
+        "line": 35,
+        "column": 75
+      }
+    },
+    "uid-37": {
+      "start": {
+        "line": 36,
+        "column": 4
+      },
+      "end": {
+        "line": 36,
+        "column": 73
+      }
+    },
+    "uid-38": {
+      "start": {
+        "line": 37,
+        "column": 4
+      },
+      "end": {
+        "line": 37,
+        "column": 76
+      }
+    },
+    "uid-39": {
+      "start": {
+        "line": 38,
+        "column": 4
+      },
+      "end": {
+        "line": 38,
+        "column": 74
+      }
+    },
+    "uid-40": {
+      "start": {
+        "line": 39,
+        "column": 4
+      },
+      "end": {
+        "line": 39,
+        "column": 77
+      }
+    },
+    "uid-41": {
+      "start": {
+        "line": 40,
+        "column": 4
+      },
+      "end": {
+        "line": 40,
+        "column": 75
+      }
+    },
+    "uid-42": {
+      "start": {
+        "line": 41,
+        "column": 4
+      },
+      "end": {
+        "line": 41,
+        "column": 72
+      }
+    },
+    "uid-43": {
+      "start": {
+        "line": 42,
+        "column": 4
+      },
+      "end": {
+        "line": 42,
+        "column": 77
+      }
+    },
+    "uid-44": {
+      "start": {
+        "line": 44,
+        "column": 2
+      },
+      "end": {
+        "line": 44,
+        "column": 81
+      }
+    },
+    "uid-45": {
+      "start": {
+        "line": 45,
+        "column": 2
+      },
+      "end": {
+        "line": 45,
         "column": 188
       }
     }
