@@ -1155,9 +1155,16 @@ async function main() {
 			}
 			// Stack indicator for 6+
 			if (count > 5 && checkerIdx > 0) {
-				// Just make the top one brighter
+				// Make the top one brighter and pulse
 				const topCm = checkerMeshes[checkerIdx - 1];
 				(topCm.glow.material as MeshBasicMaterial).opacity = 0.8;
+				// Scale slightly to indicate stack
+				topCm.mesh.scale.set(1.15, 1, 1.15);
+			} else {
+				// Reset scale for normal stacks
+				for (let j = checkerIdx - Math.min(count, 5); j < checkerIdx; j++) {
+					if (j >= 0) checkerMeshes[j].mesh.scale.set(1, 1, 1);
+				}
 			}
 		}
 
@@ -1509,7 +1516,24 @@ async function main() {
 		// Check if any legal move exists
 		if (!hasAnyLegalMove(bgState)) {
 			// No legal moves - skip turn
+			showToast('No legal moves');
 			setTimeout(() => endTurn(), 800);
+		} else if (bgState.currentPlayer === 'white') {
+			// Auto-move if only one possible move across all remaining dice
+			const allMoves: { from: number; to: number; die: number }[] = [];
+			for (const die of bgState.remainingMoves) {
+				for (const m of getLegalMoves(bgState, die)) {
+					allMoves.push({ from: m[0], to: m[1], die });
+				}
+			}
+			if (allMoves.length === 1) {
+				// Only one legal move - auto-execute after brief delay
+				setTimeout(() => {
+					if (gameState === 'playing' && bgState.currentPlayer === 'white') {
+						tryMove(allMoves[0].from, allMoves[0].to);
+					}
+				}, 400);
+			}
 		}
 	}
 
@@ -1772,6 +1796,46 @@ async function main() {
 		if (e?.object3D) e.object3D.visible = show;
 	};
 
+	function applyTheme() {
+		// Board
+		(boardMat as MeshStandardMaterial).color.set(theme.dark);
+		(boardMat as MeshStandardMaterial).emissive.set(new Color(theme.dark).multiplyScalar(0.3));
+		(edgeMat as LineBasicMaterial).color.set(theme.accent);
+		(barMat as MeshStandardMaterial).color.set(theme.bar);
+		(barMat as MeshStandardMaterial).emissive.set(new Color(theme.bar).multiplyScalar(0.5));
+		// Triangles
+		for (let i = 0; i < 24; i++) {
+			const isDark = i % 2 === 0;
+			const color = isDark ? theme.dark : theme.light;
+			const mat = pointMeshes[i].material as MeshStandardMaterial;
+			mat.color.set(color);
+			mat.emissive.set(new Color(color).multiplyScalar(0.3));
+		}
+		// Lights
+		accent1.color.set(theme.accent);
+		(cubeMat as MeshStandardMaterial).emissive.set(new Color(0xffdd44).multiplyScalar(0.4));
+		// Fog
+		(world.scene.fog as Fog).color.set(theme.fog);
+		(world.scene.fog as Fog).near = 3;
+		(world.scene.fog as Fog).far = 15;
+		// Decorations
+		for (const d of decorations) {
+			(d.mesh.material as MeshBasicMaterial).color.set(theme.accent);
+		}
+		// Ambient particles
+		for (const p of ambientParticles) {
+			(p.mesh.material as MeshBasicMaterial).color.set(theme.accent);
+		}
+		// Grid
+		gridFloor.traverse((child: any) => {
+			if (child.material) child.material.color?.set(theme.accent);
+		});
+		gridCeiling.traverse((child: any) => {
+			if (child.material) child.material.color?.set(theme.accent);
+		});
+		renderBoard();
+	}
+
 	function showScreen(screen: GameState) {
 		gameState = screen;
 		const worldPanels = ['title', 'modeselect', 'difficulty', 'pause', 'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'stats', 'skins'];
@@ -1841,6 +1905,12 @@ async function main() {
 		setText('gameover', 'moves-text', `Moves: ${bgState.movesMade}`);
 		setText('gameover', 'match-text', `Match: ${matchScore.white} - ${matchScore.black}`);
 		setText('gameover', 'xp-text', `+${points * 50} XP`);
+		setText('gameover', 'pips-text', `Pips: ${calcPipCount(bgState, 'white')} / ${calcPipCount(bgState, 'black')}`);
+		setText('gameover', 'hits-text', `Hits: ${save.hitsLanded}`);
+		setText('gameover', 'cube-text', `Cube: x${bgState.doublingCube}`);
+		setText('gameover', 'streak-text', winner === 'white' ? `Streak: ${save.currentWinStreak}` : 'Streak broken');
+		const title = LEVEL_TITLES[Math.min(Math.floor((save.level - 1) / 2.5), LEVEL_TITLES.length - 1)];
+		setText('gameover', 'level-text', `Lv.${save.level} ${title}`);
 	}
 
 	function updateAchievements() {
@@ -2016,12 +2086,14 @@ async function main() {
 				wire('btn-theme-prev', () => {
 					save.themeIndex = (save.themeIndex - 1 + THEMES.length) % THEMES.length;
 					theme = THEMES[save.themeIndex];
+					applyTheme();
 					updateSettings();
 					saveSave(save);
 				});
 				wire('btn-theme-next', () => {
 					save.themeIndex = (save.themeIndex + 1) % THEMES.length;
 					theme = THEMES[save.themeIndex];
+					applyTheme();
 					updateSettings();
 					saveSave(save);
 				});
